@@ -3,9 +3,9 @@
     import { Github, Moon, SunMedium } from 'lucide-svelte';
     import { browser, dev } from '$app/environment';
     import { inject } from '@vercel/analytics';
+    import { githubLink, githubRepo } from "$lib/Config.svelte";
     let { children } = $props();
 
-    const githubLink = "https://github.com/code406";
     inject({ mode: dev ? 'development' : 'production' }); // Vercel Web Analytics
     let theme: string;
     if (browser) {
@@ -41,7 +41,7 @@
                 </li>
             </ul>
             <ul>
-                <li><a class="secondary" href="{githubLink}"><Github /></a></li>
+                <li><a class="secondary" href="{githubLink}/{githubRepo}"><Github /></a></li>
             </ul>
         </nav>
     

@@ -1,6 +1,6 @@
 <script>
     import Marquee from '$lib/Marquee.svelte';
-    import { startYear, endYear } from '$lib/Config.svelte';
+    import { startYear, endYear, githubLink, githubRepo } from '$lib/Config.svelte';
     import { fly } from 'svelte/transition';
 </script>
 
@@ -28,7 +28,7 @@
             This project is a clone of
             <a href="https://davjhan.com/" role="link" class="secondary">David Han</a>'s "Guess the Year game"
             that I'm building for fun, to learn and use various technologies. All the code is available on 
-            <a href="https://github.com/code406/guess-the-year" role="link" class="secondary">Github</a>,
+            <a href="{githubLink}/{githubRepo}" role="link" class="secondary">Github</a>,
             so feel free to check it out!
         </p>
         <p class="pt-5 text-[var(--pico-muted-color)]">
