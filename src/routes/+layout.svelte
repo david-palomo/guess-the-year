@@ -3,6 +3,7 @@
     import { Github, Moon, SunMedium } from 'lucide-svelte';
     import { browser, dev } from '$app/environment';
     import { inject } from '@vercel/analytics';
+    let { children } = $props();
 
     const githubLink = "https://github.com/code406";
     inject({ mode: dev ? 'development' : 'production' }); // Vercel Web Analytics
@@ -24,7 +25,7 @@
         <nav class="py-4 mx-2">
             <ul>
                 <li>
-                    <button class="as-link" on:click={toggleTheme}>
+                    <button class="as-link" onclick={toggleTheme}>
                         <div class="toggle-sun"><SunMedium /></div>
                         <div class="toggle-moon"><Moon /></div>
                     </button>
@@ -44,7 +45,7 @@
             </ul>
         </nav>
     
-        <slot />
+        {@render children()}
     </main>
     
     <footer class="absolute bottom-0 w-full h-14 2xs:h-16">

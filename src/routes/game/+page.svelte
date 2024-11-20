@@ -3,23 +3,25 @@
     import { startYear, endYear } from '$lib/Config.svelte';
     import { fade, fly, scale } from 'svelte/transition';
     import { tweened } from 'svelte/motion';
-    import Typewriter from 'svelte-typewriter'
+    import Typewriter from 'svelte-typewriter';
+
+    type Status = 'guess' | 'answer' | 'gameover';
 
     const initialValues = {
         guess: Math.round((startYear + endYear) / 2),
         lives: 100,
         round: 0,
-        state: 'guess',
+        status: 'guess' as Status,
         margin: 0,
         buttonDisabled: false,
         buttonDelay: 2600,
     }
 
-    let questions = getQuestions();
-    let { guess, lives, round, state, margin, buttonDisabled, buttonDelay } = initialValues;
-    let tween = getTween(lives);
-    let buttonTrigger = {};
-    $: question = questions[round];
+    let questions = $state(getQuestions());
+    let { guess, lives, round, status, margin, buttonDisabled, buttonDelay } = $state(initialValues);
+    let tween = getTween(initialValues.lives);
+    let buttonTrigger = $state({});
+    let question = $derived(questions[round]);
 
     function fixGuess() {
         guess = guess ? Math.floor(Math.min(Math.max(guess, startYear), endYear)) : initialValues.guess;
@@ -55,24 +57,24 @@
 
     function pressNext() {
         buttonDisabled = true;
-        if (state === 'guess') {
-            state = 'answer';
+        if (status === 'guess') {
+            status = 'answer';
             margin = Math.abs(guess - question.year);
             lives = Math.max(lives - margin, 0);
             tween.set(lives, { duration: 700, delay: 1800 });
             buttonTrigger = {};
             setTimeout(() => buttonDisabled = false, buttonDelay);
-        } else if (state === 'answer' && lives > 0 && round < questions.length - 1) {
+        } else if (status === 'answer' && lives > 0 && round < questions.length - 1) {
             round++;
             guess = initialValues.guess;
-            state = 'guess';
+            status = 'guess';
             buttonDisabled = false;
-        } else if (state === 'gameover') {
+        } else if (status === 'gameover') {
             questions = getQuestions();
-            ({ guess, lives, round, state, buttonDisabled } = initialValues);
+            ({ guess, lives, round, status, buttonDisabled } = initialValues);
             tween = getTween(lives);
         } else {
-            state = 'gameover';
+            status = 'gameover';
             buttonTrigger = {};
             setTimeout(() => buttonDisabled = false, buttonDelay);
         }
@@ -95,7 +97,7 @@
     <!-- question area -->
     <article class="h-[32rem] py-8 sm:py-10 flex flex-col justify-center text-center items-center [text-wrap:balance]">
 
-        {#if state === 'gameover'}
+        {#if status === 'gameover'}
         <Typewriter cursor={false} delay={100} interval={60}>
             <h2 class="font-sans text-2xl xs:text-3xl font-bold mt-2.5 mb-0.5 text-[var(--pico-muted-color)]">
                 GAME OVER
@@ -131,12 +133,12 @@
         </p>
         {/key}
 
-        {#if state === 'guess'}
+        {#if status === 'guess'}
         <!-- guess input -->
         <div class="w-28 3xs:mb-2">
             <label for="guess-number">Guess:</label>
             <input type="number" name="guess-number" min={startYear} max={endYear}
-                step=1 bind:value={guess} on:blur={fixGuess} placeholder="year"
+                step=1 bind:value={guess} onblur={fixGuess} placeholder="year"
                 class="text-xl text-center font-bold border-[var(--pico-primary-background)] border-2 rounded-md">
         </div>
         <!-- guess range slider -->
@@ -183,9 +185,9 @@
         <!-- confirm/continue button -->
         {#key buttonTrigger}
         <button
-            in:fly={{delay:buttonDelay}} on:click={pressNext} role="button"
+            in:fly={{delay:buttonDelay}} onclick={pressNext} type="button"
             class="text-lg my-2 py-2 px-4 w-52 font-bold" disabled={buttonDisabled}>
-            {#if state === 'guess'}confirm{:else if state === 'answer'}continue{:else}play again{/if}
+            {#if status === 'guess'}confirm{:else if status === 'answer'}continue{:else}play again{/if}
         </button>
         {/key}
     </article>
