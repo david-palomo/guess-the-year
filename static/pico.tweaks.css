@@ -9,8 +9,9 @@
 }
 
 :where(:root), article, button, input, select, textarea {
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
+
 p, h1, h2, h3, h4, h5, h6, label {
     transition: color 0.2s ease-in-out;
 }
