@@ -1,7 +1,7 @@
 <script lang="ts">
     import allQuestions from '$lib/questions.json';
     import { startYear, endYear } from '$lib/Config.svelte';
-    import { fade, fly, scale } from 'svelte/transition';
+    import { fade, fly } from 'svelte/transition';
     import { tweened } from 'svelte/motion';
     import Typewriter from 'svelte-typewriter';
 
@@ -81,7 +81,7 @@
     }
 </script>
 
-<div in:scale={{ duration: 500, delay: -200 }}>
+<div in:fly>
     <!-- score and lives -->
     <div class="flex justify-between">
         <article class="flex py-2 space-x-4 mb-5">
