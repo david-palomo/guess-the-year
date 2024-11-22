@@ -19,6 +19,11 @@ body {
     overscroll-behavior-y: contain;
 }
 
+article {
+    border: 2px solid var(--pico-border-color);
+    margin-bottom: 0;
+}
+
 .container {
     max-width: 100%;
     padding-inline: var(--pico-spacing);
